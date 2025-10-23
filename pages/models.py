@@ -15,3 +15,21 @@ class ContactMessage(models.Model):
         return f"{self.name} <{self.email}> - {self.date_sent:%Y-%m-%d %H:%M}"
 
 
+class FeedbackMessage(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+    rating = models.IntegerField(choices=[
+        (1, 'Very Poor'),
+        (2, 'Poor'),
+        (3, 'Average'),
+        (4, 'Good'),
+        (5, 'Excellent')
+    ], default=3)
+    date_sent = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.subject} ({self.rating}/5) - {self.date_sent:%Y-%m-%d %H:%M}"
+
+

@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
-from .forms import ContactForm
+from .forms import ContactForm, FeedbackForm
 
 
 # Create your views here.
@@ -29,6 +29,20 @@ def contact(request):
         form = ContactForm()
 
     return render(request, "contact.html", {'form': form})
+
+def feedback(request):
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            form.save()  # saves to the DB
+            messages.success(request, "✅ Feedback sent successfully! Thank you for your input.")
+            return redirect('feedback')  # PRG: prevents duplicate form submissions
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = FeedbackForm()
+
+    return render(request, "feedback.html", {'form': form})
 
 def signup(request):
     if request.method == 'POST':
