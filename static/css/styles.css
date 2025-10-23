@@ -4,7 +4,7 @@ body {
     padding: 0;
     background-color: #f4f4f9;
     color: #333;
-    overflow:hidden;
+    overflow-x:hidden;
 }
 
 /* Navbar */
@@ -47,7 +47,7 @@ main {
     text-align: center;
 }
 
-/* Footer */
+/* Footer
 footer {
     background-color: #2c3e50;
     color: white;
@@ -57,4 +57,6 @@ footer {
     position:absolute;
     bottom:0px;
     width:100%;
-}
+} */
+
+

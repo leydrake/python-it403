@@ -1,12 +1,92 @@
 {% extends "base.html" %}
 {% block title %}Feedback{% endblock %}
-{% block header %}<h1>Send Feedback</h1>{% endblock %}
 {% block content %}
-  <p>We value your feedback! Please share your thoughts and suggestions with us.</p>
-
-  <form method="post" novalidate>
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Send Feedback</button>
-  </form>
+<div class="container col-xl-10 col-xxl-8 px-4 py-5">
+  <div class="row align-items-center g-lg-5 py-5">
+    <div class="col-lg-7 text-center text-lg-start">
+      <h1 class="display-4 fw-bold lh-1 text-body-emphasis mb-3">Share Your Feedback</h1>
+      <p class="col-lg-10 fs-4">We value your feedback! Please share your thoughts and suggestions with us to help us improve.</p>
+    </div>
+    <div class="col-md-10 mx-auto col-lg-5">
+      <form method="post" class="p-4 p-md-5 border rounded-3 bg-body-tertiary" novalidate>
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger" role="alert">
+            {{ form.non_field_errors }}
+          </div>
+        {% endif %}
+        
+        {% for field in form %}
+          {% if field.name == 'rating' %}
+            <div class="mb-3">
+              <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+              <select class="form-select {% if field.errors %}is-invalid{% endif %}" 
+                      id="{{ field.id_for_label }}" name="{{ field.name }}" 
+                      {% if field.field.required %}required{% endif %}>
+                {% for value, label in field.field.choices %}
+                  <option value="{{ value }}" {% if field.value == value %}selected{% endif %}>
+                    {{ label }}
+                  </option>
+                {% endfor %}
+              </select>
+              {% if field.errors %}
+                <div class="invalid-feedback">
+                  {{ field.errors.0 }}
+                </div>
+              {% endif %}
+            </div>
+          {% elif field.field.widget.input_type == 'email' %}
+            <div class="form-floating mb-3">
+              <input type="email" class="form-control {% if field.errors %}is-invalid{% endif %}" 
+                     id="floating{{ field.name|title }}" name="{{ field.name }}" 
+                     placeholder="{{ field.label }}" 
+                     value="{{ field.value|default:'' }}" 
+                     {% if field.field.required %}required{% endif %}>
+              <label for="floating{{ field.name|title }}">{{ field.label }}</label>
+              {% if field.errors %}
+                <div class="invalid-feedback">
+                  {{ field.errors.0 }}
+                </div>
+              {% endif %}
+            </div>
+          {% elif field.name == 'message' %}
+            <div class="form-floating mb-3">
+              <textarea class="form-control {% if field.errors %}is-invalid{% endif %}" 
+                        id="floating{{ field.name|title }}" name="{{ field.name }}" 
+                        placeholder="{{ field.label }}" 
+                        style="height: 100px" 
+                        {% if field.field.required %}required{% endif %}>{{ field.value|default:'' }}</textarea>
+              <label for="floating{{ field.name|title }}">{{ field.label }}</label>
+              {% if field.errors %}
+                <div class="invalid-feedback">
+                  {{ field.errors.0 }}
+                </div>
+              {% endif %}
+            </div>
+          {% else %}
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control {% if field.errors %}is-invalid{% endif %}" 
+                     id="floating{{ field.name|title }}" name="{{ field.name }}" 
+                     placeholder="{{ field.label }}" 
+                     value="{{ field.value|default:'' }}" 
+                     {% if field.field.required %}required{% endif %}>
+              <label for="floating{{ field.name|title }}">{{ field.label }}</label>
+              {% if field.errors %}
+                <div class="invalid-feedback">
+                  {{ field.errors.0 }}
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+        
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-secondary" type="reset">Clear All Fields</button>
+          <button class="btn btn-primary flex-fill" type="submit">Send Feedback</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}

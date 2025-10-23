@@ -1,11 +1,63 @@
 {% extends "base.html" %}
 {% block title %}Sign Up{% endblock %}
 {% block content %}
-<h2>Create an Account</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Sign Up</button>
-</form>
-<p>Already have an account? <a href="{% url 'login' %}">Log in here</a>.</p>
+<div class="container col-xl-10 col-xxl-8 px-4 py-5">
+  <div class="row align-items-center g-lg-5 py-5">
+    <div class="col-lg-7 text-center text-lg-start">
+      <h1 class="display-4 fw-bold lh-1 text-body-emphasis mb-3">Join Us Today!</h1>
+      <p class="col-lg-10 fs-4">Create your account to get started and unlock all the amazing features we have to offer.</p>
+    </div>
+    <div class="col-md-10 mx-auto col-lg-5">
+      <form method="post" class="p-4 p-md-5 border rounded-3 bg-body-tertiary">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger" role="alert">
+            {{ form.non_field_errors }}
+          </div>
+        {% endif %}
+        
+        {% for field in form %}
+          <div class="form-floating mb-3">
+            {% if field.field.widget.input_type == 'password' %}
+              <input type="password" class="form-control {% if field.errors %}is-invalid{% endif %}" 
+                     id="floating{{ field.name|title }}" name="{{ field.name }}" 
+                     placeholder="{{ field.label }}" 
+                     value="{{ field.value|default:'' }}" 
+                     {% if field.field.required %}required{% endif %}>
+            {% elif field.field.widget.input_type == 'email' %}
+              <input type="email" class="form-control {% if field.errors %}is-invalid{% endif %}" 
+                     id="floating{{ field.name|title }}" name="{{ field.name }}" 
+                     placeholder="{{ field.label }}" 
+                     value="{{ field.value|default:'' }}" 
+                     {% if field.field.required %}required{% endif %}>
+            {% else %}
+              <input type="text" class="form-control {% if field.errors %}is-invalid{% endif %}" 
+                     id="floating{{ field.name|title }}" name="{{ field.name }}" 
+                     placeholder="{{ field.label }}" 
+                     value="{{ field.value|default:'' }}" 
+                     {% if field.field.required %}required{% endif %}>
+            {% endif %}
+            <label for="floating{{ field.name|title }}">{{ field.label }}</label>
+            {% if field.errors %}
+              <div class="invalid-feedback">
+                {{ field.errors.0 }}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+        
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Create Account</button>
+        
+        <hr class="my-4">
+        
+        <div class="text-center">
+          <small class="text-body-secondary">
+            Already have an account? <a href="{% url 'login' %}">Sign in here</a>
+          </small>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}
